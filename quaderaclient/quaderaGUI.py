@@ -9,7 +9,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.setWindowTitle("Quadera client GUI")
         self.cw = QtWidgets.QWidget()
         self.gridlayout = QtWidgets.QGridLayout()
-
+        self.connected:bool = False
         rown = 0
         self.hostbox = QtWidgets.QLineEdit()
         self.hostbox.setObjectName('hostbox')
@@ -33,6 +33,12 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.portlabel.setText('port number')
         self.gridlayout.addWidget(self.portlabel, rown, 1)
 
+        self.connectserverbutton = QtWidgets.QPushButton()
+        self.connectserverbutton.setObjectName("self.connectserverbutton")
+        self.connectserverbutton.setText("connect server")
+        self.connectserverbutton.clicked.connect(self.connecttoserver)
+        self.gridlayout.addWidget(self.connectserverbutton, rown, 2)
+
         rown+=1
         self.templatelabel = QtWidgets.QLabel()
         self.templatelabel.setText("template file")
@@ -48,6 +54,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.openbutton.setObjectName("self.openbutton")
         self.openbutton.setText("open template")
         self.openbutton.clicked.connect(self.opentemplate)
+        self.openbutton.setEnabled(False)
         self.gridlayout.addWidget(self.openbutton,rown,1)
 
         rown+=1
@@ -55,12 +62,14 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.startbutton.setObjectName('startbutton')
         self.startbutton.setText("start acquisition")
         self.startbutton.clicked.connect(self.startaq)
+        self.startbutton.setEnabled(False)
         self.gridlayout.addWidget(self.startbutton,rown,0)
 
         self.stopbutton = QtWidgets.QPushButton()
         self.stopbutton.setObjectName('stopbutton')
         self.stopbutton.setText('stop acquisition')
         self.stopbutton.clicked.connect(self.stopaq)
+        self.stopbutton.setEnabled(False)
         self.gridlayout.addWidget(self.stopbutton, rown,1)
 
         rown+=1
@@ -69,6 +78,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.exportbutton.setObjectName('exportbutton')
         self.exportbutton.setText('export data')
         self.exportbutton.clicked.connect(self.exportdata)
+        self.exportbutton.setEnabled(False)
         self.gridlayout.addWidget(self.exportbutton,rown, 0)
 
         self.exportfname = QtWidgets.QLineEdit()
@@ -85,6 +95,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.connectbutton.setObjectName("self.connectbutton")
         self.connectbutton.setText("connect")
         self.gridlayout.addWidget(self.connectbutton,rown,0)
+        self.switchwidgets(False)
 
         self.cw.setLayout(self.gridlayout)
         self.setCentralWidget(self.cw)
@@ -99,25 +110,44 @@ class QuaderaGui(QtWidgets.QMainWindow):
         return Quadera(host,port)
 
     def startaq(self):
-        quad = self.getquad()
-        print(quad.start())
+        print(self.quad.start())
 
     def stopaq(self):
-        quad = self.getquad()
-        print(quad.stop())
+        print(self.quad.stop())
 
     def exportdata(self):
-        quad = self.getquad()
         name = self.exportfname.text().strip()
-        print(quad.exportData(name))
+        print(self.quad.exportData(name))
     def opentemplate(self):
         file = self.templatebox.text()
-        quad = self.getquad()
-        print(quad.openProjectFile(file))
+        print(self.quad.openProjectFile(file))
 
     def connect(self):
-        quad = self.getquad()
-        print(quad.connect())
+        print(self.quad.connect())
+
+    def switchwidgets(self, state:bool):
+        #self.connectserverbutton.setEnabled(not state)
+        self.openbutton.setEnabled(state)
+        self.connectbutton.setEnabled(state)
+        self.startbutton.setEnabled(state)
+        self.stopbutton.setEnabled(state)
+        self.exportbutton.setEnabled(state)
+        self.connectbutton.setEnabled(state)
+    def connecttoserver(self):
+        match self.connected:
+            case False:
+                self.quad = self.getquad()
+                self.connectserverbutton.setText('disconnect server')
+                self.hostbox.setEnabled(False)
+                self.portbox.setEnabled(False)
+                self.switchwidgets(True)
+                self.connected = True
+            case True:
+                self.connectserverbutton.setText('connect server')
+                self.hostbox.setEnabled(True)
+                self.portbox.setEnabled(False)
+                self.switchwidgets(False)
+                self.connected = False
     
 
 
