@@ -47,6 +47,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.openbutton = QtWidgets.QPushButton()
         self.openbutton.setObjectName("self.openbutton")
         self.openbutton.setText("open template")
+        self.openbutton.clicked.connect(self.opentemplate)
         self.gridlayout.addWidget(self.openbutton,rown,1)
 
         rown+=1
@@ -67,6 +68,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.exportbutton = QtWidgets.QPushButton()
         self.exportbutton.setObjectName('exportbutton')
         self.exportbutton.setText('export data')
+        self.exportbutton.clicked.connect(self.exportdata)
         self.gridlayout.addWidget(self.exportbutton,rown, 0)
 
         self.exportfname = QtWidgets.QLineEdit()
@@ -78,6 +80,12 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.fnamelabel.setText('export file name')
         self.gridlayout.addWidget(self.fnamelabel,rown, 2)
 
+        rown+=1
+        self.connectbutton = QtWidgets.QPushButton()
+        self.connectbutton.setObjectName("self.connectbutton")
+        self.connectbutton.setText("connect")
+        self.gridlayout.addWidget(self.connectbutton,rown,0)
+
         self.cw.setLayout(self.gridlayout)
         self.setCentralWidget(self.cw)
 
@@ -86,21 +94,30 @@ class QuaderaGui(QtWidgets.QMainWindow):
         port = self.portbox.value()
         return host,port
 
+    def getquad(self):
+        host,port = self.gethostport()
+        return Quadera(host,port)
+
     def startaq(self):
-        host, port = self.gethostport()
-        quad = Quadera(host,port=port)
-        quad.start()
+        quad = self.getquad()
+        print(quad.start())
 
     def stopaq(self):
-        host,port = self.gethostport()
-        quad = Quadera(host,port)
-        quad.stop()
+        quad = self.getquad()
+        print(quad.stop())
 
     def exportdata(self):
-        host,port = self.gethostport()
-        quad = Quadera(host,port)
+        quad = self.getquad()
         name = self.exportfname.text().strip()
-        quad.exportData(name)
+        print(quad.exportData(name))
+    def opentemplate(self):
+        file = self.templatebox.text()
+        quad = self.getquad()
+        print(quad.openProjectFile(file))
+
+    def connect(self):
+        quad = self.getquad()
+        print(quad.connect())
     
 
 

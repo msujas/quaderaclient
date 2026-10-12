@@ -1,6 +1,5 @@
 import socket
 
-
 class Quadera:
     def __init__(self, host, port=15000, timeout=120):
         self.sock = socket.create_connection((host, port), timeout=timeout)
@@ -30,6 +29,8 @@ class Quadera:
         return self.cmd("CLOSE")
     def getstatus(self):
         return self.cmd("STATUS")
+    def connect(self):
+        return self.cmd("CONNECT")
     def close(self):
         try:
             self.cmd("QUIT")
