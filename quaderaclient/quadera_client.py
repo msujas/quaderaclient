@@ -31,6 +31,10 @@ class Quadera:
         return self.cmd("STATUS")
     def connect(self):
         return self.cmd("CONNECT")
+    def choosedevice(self,devname):
+        return self.cmd(f"DEVICE {devname}")
+    def getdevices(self):
+        return self.cmd("DEVICES")
     def close(self):
         try:
             self.cmd("QUIT")
