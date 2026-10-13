@@ -37,7 +37,7 @@ class Quadera:
         statusdct = {}
         for s in ssplit:
             ssplit2 = s.split('=')
-            statusdct[ssplit2]=ssplit2[1]
+            statusdct[ssplit2[0]]=ssplit2[1]
         return statusdct
     def connect(self):
         return self.cmd("CONNECT")
