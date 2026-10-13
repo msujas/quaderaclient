@@ -32,7 +32,12 @@ class Quadera:
     def closeProject(self):
         return self.cmd("CLOSE")
     def getstatus(self):
-        return self.cmd("STATUS")
+        status = self.cmd("STATUS")
+        ssplit = status.split(';')
+        statusdct = {}
+        for s in ssplit:
+            statusdct[s[0]]=s[1]
+        return statusdct
     def connect(self):
         return self.cmd("CONNECT")
     def choosedevice(self,devname):
