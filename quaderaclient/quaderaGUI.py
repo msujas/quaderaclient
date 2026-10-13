@@ -1,11 +1,28 @@
 from PyQt6 import QtCore, QtWidgets, QtGui
-import sys
+import sys, os
 from .quadera_client import Quadera
+from pathlib import Path
 
+home = Path.home()
+
+# TODO - set up config saving
+class GuiValues():
+    def __init__(self,widget:QtWidgets.QLineEdit|QtWidgets.QSpinBox):
+        self.name = widget.objectName()
+        match type(widget):
+            case QtWidgets.QLineEdit:
+                self.value = widget.text()
+            case QtWidgets.QSpinBox:
+                self.value = widget.value()
+
+    
 PORT = 15000
 class QuaderaGui(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
+        self.settings = QtCore.QSettings()
+        self.configfile = f'{home}/.log/quaderagui/quaderagui.log'
+        os.makedirs(os.path.dirname(self.configfile),exist_ok=True)
         self.setWindowTitle("Quadera client GUI")
         self.cw = QtWidgets.QWidget()
         self.gridlayout = QtWidgets.QGridLayout()
@@ -149,7 +166,18 @@ class QuaderaGui(QtWidgets.QMainWindow):
                 self.switchwidgets(False)
                 self.connected = False
     
-
+    def updatewidgets(self):
+        widgets = [self.hostbox, self.portbox, self.templatebox, self.exportfname]
+        self.widgets = [GuiValues(w) for w in widgets]
+    def saveconfig(self):
+        s = ''
+        for w in self.widgets:
+            s += f'{w.name};{w.value}\n'
+        f = open(self.configfile,'w')
+        f.write(s)
+        f.close()
+    def readconfig(self):
+        pass
 
 def run():
     app = QtWidgets.QApplication(sys.argv)

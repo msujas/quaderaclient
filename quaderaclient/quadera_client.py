@@ -13,8 +13,12 @@ class Quadera:
         if not reply.startswith("OK"):
             raise RuntimeError(f"{line!r} -> {reply or 'connection closed'}")
         return reply[2:].strip()
-    def openProjectFile(self, template):
-        return self.cmd(f"OPEN {template}")
+    def openProjectFile(self, template, outputfile):
+        '''
+        template -  .qmt file
+        outputfile - .qmp file
+        '''
+        return self.cmd(f"OPEN {template}|{outputfile}")
     def start(self):
         return self.cmd(f"START")
     def stop(self):
