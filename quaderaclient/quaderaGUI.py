@@ -253,7 +253,9 @@ class QuaderaGui(QtWidgets.QMainWindow):
         return super().closeEvent(a0)
 
     def setdevice1(self):
-        return self.quad.choosedevice(1)
+        output = self.quad.choosedevice(1)
+        print(output)
+        return output
 
 
 def run():
