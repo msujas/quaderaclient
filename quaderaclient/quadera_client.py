@@ -4,6 +4,7 @@ class Quadera:
     def __init__(self, host, port=15000, timeout=120):
         self.sock = socket.create_connection((host, port), timeout=timeout)
         self.file = self.sock.makefile("rw", encoding="utf-8", newline="\n")
+        #self.choosedevice(1)
 
     def cmd(self, line):
         """Send one command; return the text after 'OK', raise on 'ERR'."""
@@ -45,11 +46,16 @@ class Quadera:
         return self.cmd(f"DEVICE {devname}")
     def getdevices(self):
         return self.cmd("DEVICES")
+
     def close(self):
+        self.cmd("CLOSE")
+    
+    def quit(self):
         try:
             self.cmd("QUIT")
         finally:
             self.sock.close()
+
 
 
 if __name__ == "__main__":
