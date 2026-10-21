@@ -161,7 +161,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
 
     def getquad(self):
         host,port = self.gethostport()
-        return Quadera(host,port, timeout=10)
+        return Quadera(host,port, timeout=30)
 
     def startaq(self):
         print(self.quad.start())
