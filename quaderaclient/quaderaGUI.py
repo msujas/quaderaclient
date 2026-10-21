@@ -145,6 +145,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.connectbutton = QtWidgets.QPushButton()
         self.connectbutton.setObjectName("self.connectbutton")
         self.connectbutton.setText("connect device")
+        self.connectbutton.clicked.connect(self.connect)
         self.gridlayout.addWidget(self.connectbutton,rown,0)
         self.switchwidgets(False)
 
