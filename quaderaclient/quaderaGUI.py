@@ -5,6 +5,10 @@ from pathlib import Path
 
 home = Path.home()
 
+QUADERADIR = 'C:/Users/opd31/Documents/My Quadera'
+QUADDATADIR = f'{QUADERADIR}/Data'
+QUADTEMPLATEDIR = f'{QUADERADIR}/QMG220/Templates'
+
 # TODO - set up config saving
 class GuiValues():
     def __init__(self,widget:QtWidgets.QLineEdit|QtWidgets.QSpinBox):
@@ -140,7 +144,7 @@ class QuaderaGui(QtWidgets.QMainWindow):
         rown+=1
         self.connectbutton = QtWidgets.QPushButton()
         self.connectbutton.setObjectName("self.connectbutton")
-        self.connectbutton.setText("connect")
+        self.connectbutton.setText("connect device")
         self.gridlayout.addWidget(self.connectbutton,rown,0)
         self.switchwidgets(False)
 
@@ -171,7 +175,9 @@ class QuaderaGui(QtWidgets.QMainWindow):
         print(self.quad.exportData(name))
     def opentemplate(self):
         file = self.templatebox.text()
-        print(self.quad.openProjectFile(file))
+        basefile = os.path.basename(file)
+        ofile = f'{QUADDATADIR}/{basefile.replace('.qmt','.qmp')}'
+        print(self.quad.openProjectFile(file,ofile))
 
     def connect(self):
         self.saveconfig()
