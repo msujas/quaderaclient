@@ -1,4 +1,4 @@
-from PyQt6 import QtCore, QtWidgets, QtGui
+from PyQt6 import QtCore, QtWidgets
 import sys, os
 from .quadera_client import Quadera
 from pathlib import Path
@@ -9,7 +9,6 @@ QUADERADIR = 'C:/Users/opd31/Documents/My Quadera'
 QUADDATADIR = f'{QUADERADIR}/Data'
 QUADTEMPLATEDIR = f'{QUADERADIR}/QMG220/Templates'
 
-# TODO - set up config saving
 class GuiValues():
     def __init__(self,widget:QtWidgets.QLineEdit|QtWidgets.QSpinBox):
         self.widget = widget
@@ -219,7 +218,11 @@ class QuaderaGui(QtWidgets.QMainWindow):
                 self.switchwidgets(False)
                 self.connected = False
     def setstartstop(self):
-        status = self.quad.getstatus()
+        try:
+            status = self.quad.getstatus()
+        except RuntimeError:
+            print('no connection')
+            return
         if status['running'] == 'Running':
             self.startbutton.setEnabled(False)
             self.stopbutton.setEnabled(True)
