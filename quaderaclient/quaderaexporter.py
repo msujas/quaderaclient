@@ -12,7 +12,7 @@ def parseargs():
     ap = argparse.ArgumentParser()
     ap.add_argument('--host',type=str, default='127.0.0.1', help = 'server host name (default localhost)')
     ap.add_argument('--port', type=int, help = 'server port value', default=PORT)
-    ap.add_argument('--qhost', type=str, help='host name for Quadera server')
+    ap.add_argument('--qhost', type=str, help='host name for Quadera server', required=True)
     ap.add_argument('--qport', type=int, default=15000, help='port value for Quadera server')
     args = ap.parse_args()
     return args.host, args.port, args.qhost, args.qport
