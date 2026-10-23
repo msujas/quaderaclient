@@ -2,31 +2,34 @@ import socket
 from .quadera_client import Quadera
 import os, subprocess
 import argparse
-import logging
-import time
 import asyncio
+from pathlib import Path
+
+home = Path.home()
+user = os.path.split(home)[-1]
 
 PORT = 59682
 
 def parseargs():
     ap = argparse.ArgumentParser()
     ap.add_argument('--host',type=str, default='127.0.0.1', help = 'server host name (default localhost)')
-    ap.add_argument('--port', type=int, help = 'server port value', default=PORT)
+    ap.add_argument('--port', type=int, help = f'server port value, default {PORT}', default=PORT)
     ap.add_argument('--qhost', type=str, help='host name for Quadera server', required=True)
-    ap.add_argument('--qport', type=int, default=15000, help='port value for Quadera server')
+    ap.add_argument('--qport', type=int, default=15000, help=f'port value for Quadera server. Default 15000')
+    ap.add_argument('--username',type=str,default=user,help=f'user name on remote PC. Default: this user: {user}')
     args = ap.parse_args()
-    return args.host, args.port, args.qhost, args.qport
+    return args.host, args.port, args.qhost, args.qport, args.username
 
 class QuaderaHandler():
     def __init__(self):
-        self.host,self.port, self.qhost, self.qport = parseargs()
+        self.host,self.port, self.qhost, self.qport, self.user = parseargs()
         self.quad = Quadera(self.qhost, self.qport)
         self.running = False
         self.looptask: asyncio.Task | None = None
         self.shutdownevent = asyncio.Event()
 
     async def mainloop(self, exportname, localname):
-        cmd = ['scp', f'{self.qhost}:{exportname}', localname]
+        cmd = ['scp', f'{self.user}@{self.qhost}:{exportname}', localname]
         print(f'loop to export data as {exportname}, saving data as {localname}')
         self.running = True
         try:
