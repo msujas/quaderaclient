@@ -25,11 +25,17 @@ class Quadera:
     def stop(self):
         return self.cmd(f"STOP")
     def exportData(self, fname:str):
+        self.stop() #stop collection to prevent reading and writing at same time
+        status = self.getstatus()
+        while status['running'] == 'Running':
+            status = self.getstatus()
         if not fname:
             return self.cmd(f"EXPORT")
         if not fname.endswith('.asc'):
             fname += '.asc'
-        return self.cmd(f"EXPORT {fname}")
+        result = self.cmd(f"EXPORT {fname}")
+        self.start()
+        return result
     def closeProject(self):
         return self.cmd("CLOSE")
     def getstatus(self):

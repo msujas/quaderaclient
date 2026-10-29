@@ -10,8 +10,8 @@ class QuadExClient():
         s.connect((self.host,self.port))
         s.sendall(f'{message}\n'.encode())
         return s.recv(1024).decode()
-    def runexporter(self, exportname, localname):
-        data = self.sendmessage(f'run {exportname}|{localname}')
+    def runexporter(self, exportname, localname, waittime = 60):
+        data = self.sendmessage(f'run {exportname}|{localname}|{waittime}')
         return data
     def stopexporter(self):
         data = self.sendmessage('stop')

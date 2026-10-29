@@ -23,22 +23,23 @@ def parseargs():
 class QuaderaHandler():
     def __init__(self):
         self.host,self.port, self.qhost, self.qport, self.user = parseargs()
-        self.quad = Quadera(self.qhost, self.qport)
+        print(f'using Quadera server at {self.qhost}:{self.qport}')
         self.running = False
         self.looptask: asyncio.Task | None = None
         self.shutdownevent = asyncio.Event()
 
-    async def mainloop(self, exportname, localname):
+    async def mainloop(self, exportname, localname, waittime = 60):
         cmd = ['scp', f'{self.user}@{self.qhost}:{exportname}', localname]
         print(f'loop to export data as {exportname}, saving data as {localname}')
         self.running = True
+        self.quad = Quadera(self.qhost, self.qport)
         try:
             while self.running:
                 qdata = self.quad.exportData(exportname)
                 print(qdata)
                 print(' '.join(cmd))
                 subprocess.run(cmd)
-                await asyncio.sleep(10)
+                await asyncio.sleep(waittime)
         except asyncio.CancelledError as e:
             print("main loop stopped")
             raise e
@@ -58,10 +59,16 @@ class QuaderaHandler():
         match cmd.lower():
             case 'run':
                 try:
-                    exportname, fname = args.split('|')
-                    print(exportname, fname)
+                    argsplit = args.split('|')
+                    exportname = argsplit[0]
+                    fname = argsplit[1]
+                    if len(args)>2:
+                        waittime = float(argsplit[2])
+                    else:
+                        waittime = 60
+                    print(exportname, fname,waittime)
                 except ValueError:
-                    return 'run command not in correct format. Must be "run <export file name>|<local file name>"'
+                    return 'run command not in correct format. Must be "run <export file name>|<local file name>|<optional wait time>"'
                 if self.isrunning():
                     self.looptask.cancel()
                 self.looptask = asyncio.create_task(self.mainloop(exportname, fname))
