@@ -82,9 +82,21 @@ class QuaderaGui(QtWidgets.QMainWindow):
         rown+=1
         self.setdevicebutton = QtWidgets.QPushButton()
         self.setdevicebutton.setObjectName("self.setdevicebutton")
-        self.setdevicebutton.setText("set device 1")
-        self.setdevicebutton.clicked.connect(self.setdevice1)
+        self.setdevicebutton.setText("set device number")
+        self.setdevicebutton.clicked.connect(self.setdeviceno)
         self.gridlayout.addWidget(self.setdevicebutton, rown, 0)
+
+        self.devicenobox = QtWidgets.QSpinBox()
+        self.devicenobox.setObjectName("self.devicenobox")
+        self.devicenobox.setMinimum(0)
+        self.devicenobox.setMaximum(2)
+        self.devicenobox.setValue(1)
+        self.gridlayout.addWidget(self.devicenobox, rown, 1)
+
+        self.devicenolabel = QtWidgets.QLabel()
+        self.devicenolabel.setObjectName("self.devicenolabel")
+        self.devicenolabel.setText("device number to set")
+        self.gridlayout.addWidget(self.devicenolabel, rown, 2)
 
         rown+=1
         self.templatelabel = QtWidgets.QLabel()
@@ -262,8 +274,8 @@ class QuaderaGui(QtWidgets.QMainWindow):
         self.saveconfig()
         return super().closeEvent(a0)
 
-    def setdevice1(self):
-        output = self.quad.choosedevice(1)
+    def setdeviceno(self):
+        output = self.quad.choosedevice(self.devicenobox.value())
         print(output)
         return output
 
