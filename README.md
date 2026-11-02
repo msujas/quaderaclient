@@ -1,3 +1,5 @@
+Client for communicating with a custom TCP server on Quader for BM31
+
 QUADERA TcpControl add-in
 =========================
 
