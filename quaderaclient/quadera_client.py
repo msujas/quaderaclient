@@ -63,17 +63,3 @@ class Quadera:
             self.sock.close()
 
 
-
-if __name__ == "__main__":
-    import time
-
-    q = Quadera("127.0.0.1")          # address of the QUADERA PC
-    print(q.cmd("STATUS"))
-    q.cmd(r"OPEN C:\Path\To\MyTemplate.qmt|test_run.qmp")
-    q.cmd("FILAMENT ON")
-    q.cmd("START")
-    time.sleep(60)
-    q.cmd("STOP")
-    print("exported:", q.cmd("EXPORT"))
-    q.cmd("CLOSE")
-    q.close()
