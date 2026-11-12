@@ -30,7 +30,7 @@ class Quadera:
         while status['running'] == 'Running':
             status = self.getstatus()
         if not fname:
-            return self.cmd(f"EXPORT")
+            self.cmd(f"EXPORT")
         if not fname.endswith('.asc'):
             fname += '.asc'
         try:
