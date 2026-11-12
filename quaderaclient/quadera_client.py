@@ -33,7 +33,11 @@ class Quadera:
             return self.cmd(f"EXPORT")
         if not fname.endswith('.asc'):
             fname += '.asc'
-        result = self.cmd(f"EXPORT {fname}")
+        try:
+            result = self.cmd(f"EXPORT {fname}")
+        except RuntimeError as e:
+            print("couldn't export data")
+            print(e)
         self.start()
         return result
     def closeProject(self):
