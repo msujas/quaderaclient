@@ -38,6 +38,7 @@ class Quadera:
         except RuntimeError as e:
             print("couldn't export data")
             print(e)
+            result = str(e)
         self.start()
         return result
     def closeProject(self):
