@@ -25,6 +25,10 @@ class Quadera:
     def stop(self):
         return self.cmd(f"STOP")
     def exportData(self, fname:str):
+        status = self.getstatus()
+        if not status['project']:
+            message = 'ERR. no project file open. Can\'t export'
+            return message
         self.stop() #stop collection to prevent reading and writing at same time
         status = self.getstatus()
         while status['running'] == 'Running':
