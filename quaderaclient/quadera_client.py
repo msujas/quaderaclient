@@ -30,6 +30,10 @@ class Quadera:
             message = 'ERR. no project file open. Can\'t export'
             print(message)
             return message
+        if status['running'] != 'Running':
+            message = 'ERR. MS not running. Can\'t export'
+            print(message)
+            return message
         self.stop() #stop collection to prevent reading and writing at same time
         status = self.getstatus()
         while status['running'] == 'Running':
