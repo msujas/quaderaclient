@@ -28,6 +28,7 @@ class Quadera:
         status = self.getstatus()
         if not status['project']:
             message = 'ERR. no project file open. Can\'t export'
+            print(message)
             return message
         self.stop() #stop collection to prevent reading and writing at same time
         status = self.getstatus()

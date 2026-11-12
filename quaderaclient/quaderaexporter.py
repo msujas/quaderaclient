@@ -42,7 +42,9 @@ class QuaderaHandler():
         try:
             while self.running:
                 qdata = self.quad.exportData(exportname)
-                
+                if 'ERR' in qdata:
+                    print(qdata)
+                    raise asyncio.CancelledError(qdata)
                 print(dtstring,end=' ')
                 print(qdata)
                 print(' '.join(cmd))
