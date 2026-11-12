@@ -4,6 +4,8 @@ import os, subprocess
 import argparse
 import asyncio
 from pathlib import Path
+from datetime import datetime
+import time
 
 home = Path.home()
 user = os.path.split(home)[-1]
@@ -19,6 +21,10 @@ def parseargs():
     ap.add_argument('--username',type=str,default=user,help=f'user name on remote PC. Default: this user: {user}')
     args = ap.parse_args()
     return args.host, args.port, args.qhost, args.qport, args.username
+
+def dtstring():
+    dt = datetime.fromtimestamp(time.time())
+    return f'{dt.year:04d}{dt.month:02d}{dt.day:02d}_{dt.hour:02d}{dt.minute:02d}{dt.second:02d}'
 
 class QuaderaHandler():
     def __init__(self):
@@ -36,6 +42,8 @@ class QuaderaHandler():
         try:
             while self.running:
                 qdata = self.quad.exportData(exportname)
+                
+                print(dtstring,end=' ')
                 print(qdata)
                 print(' '.join(cmd))
                 subprocess.run(cmd)
@@ -46,6 +54,7 @@ class QuaderaHandler():
         except RuntimeError as e:
             estring= str(e)
             if 'connection closed' in estring:
+                print('connection closed')
                 print(e)
             raise asyncio.CancelledError
 
@@ -56,6 +65,14 @@ class QuaderaHandler():
     async def processCommand(self, line:str):
         cmd = line.split()[0]
         args = line.replace(cmd,'').strip()
+        
+        async def stoptask():
+            self.looptask.cancel()
+            try:
+                await self.looptask
+            except asyncio.CancelledError:
+                pass
+
         match cmd.lower():
             case 'run':
                 try:
@@ -70,17 +87,15 @@ class QuaderaHandler():
                 except ValueError:
                     return 'run command not in correct format. Must be "run <export file name>|<local file name>|<optional wait time>"'
                 if self.isrunning():
-                    self.looptask.cancel()
+                    await stoptask()
+                    print('current task stopped')
+                        
                 self.looptask = asyncio.create_task(self.mainloop(exportname, fname))
                 return 'started'
             case 'stop':
                 if not self.isrunning():
                     return 'not running'
-                self.looptask.cancel()
-                try:
-                    await self.looptask
-                except asyncio.CancelledError:
-                    pass
+                await stoptask()
                 return 'stopped'
             case 'status':
                 return 'running' if self.isrunning() else 'not running'

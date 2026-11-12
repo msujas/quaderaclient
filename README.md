@@ -5,7 +5,7 @@ QUADERA TcpControl add-in
 
 Makes QUADERA listen on a TCP port (default 15000) so another program can
 start, stop and export measurements. Based on the calls used by the
-Triggered Run add-in. NOT YET COMPILED OR TESTED against QUADERA.
+Triggered Run add-in.
 
 Install
 -------
