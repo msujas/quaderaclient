@@ -7,6 +7,21 @@ class DeviceName():
     def __str__(self):
         return f'{self.name} ({self.devtype})'
     
+class DeviceDct():
+    def __init__(self, devdct:dict[int,DeviceName]=None):
+        if devdct is None:
+            self.devdct = {}
+        else: 
+            self.devdct = devdct
+    def __str__(self):
+        string = ''
+        for item in self.devdct:
+            string += f'{item}: {self.devdct[item]}\n'
+        return string
+    def __getitem__(self, key):
+        return self.devdct[key]
+    def __setitem__(self, key, value):
+        self.devdct[key] = value
 
 class Quadera:
     def __init__(self, host, port=15000, timeout=120):
@@ -83,6 +98,7 @@ class Quadera:
             devtype = name_type.split(' (')[1].replace(')','')
             dobj = DeviceName(name,devtype)
             ddct[index] = dobj
+        ddct = DeviceDct(ddct)
         return ddct
 
     def close(self):
