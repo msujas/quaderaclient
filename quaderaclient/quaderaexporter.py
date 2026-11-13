@@ -39,13 +39,18 @@ class QuaderaHandler():
         print(f'loop to export data as {exportname}, saving data as {localname}')
         self.running = True
         self.quad = Quadera(self.qhost, self.qport)
+        tries = 3
         try:
             while self.running:
-                qdata = self.quad.exportData(exportname)
-                if 'ERR' in qdata:
-                    print(qdata)
-                    raise asyncio.CancelledError(qdata)
-                print(dtstring,end=' ')
+                for n in range(tries):
+                    qdata = self.quad.exportData(exportname)
+                    if 'ERR' in qdata:
+                        print(qdata)
+                        if n >= tries-1:
+                            raise asyncio.CancelledError(qdata)
+                    else:
+                        break    
+                print(dtstring(),end=' ')
                 print(qdata)
                 print(' '.join(cmd))
                 subprocess.run(cmd)
