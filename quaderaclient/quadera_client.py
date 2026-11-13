@@ -3,7 +3,10 @@ import socket
 class DeviceName():
     def __init__(self, name:str, devtype:str):
         self.name=name
-        self.type=devtype
+        self.devtype=devtype
+    def __str__(self):
+        return f'{self.name} ({self.type})'
+    
 
 class Quadera:
     def __init__(self, host, port=15000, timeout=120):
@@ -74,7 +77,7 @@ class Quadera:
         dsplit = dstring.split(';')
         ddct = {}
         for device in dsplit:
-            index = device.split('=')[0]
+            index = int(device.split('=')[0])
             name_type = device.split('=')[1]
             name = name_type.split(' (')[0]
             devtype = name_type.split(' (')[1].replace(')','')
