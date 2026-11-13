@@ -5,7 +5,7 @@ class DeviceName():
         self.name=name
         self.devtype=devtype
     def __str__(self):
-        return f'{self.name} ({self.type})'
+        return f'{self.name} ({self.devtype})'
     
 
 class Quadera:
