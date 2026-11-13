@@ -1,5 +1,10 @@
 import socket
 
+class DeviceName():
+    def __init__(self, name:str, devtype:str):
+        self.name=name
+        self.type=devtype
+
 class Quadera:
     def __init__(self, host, port=15000, timeout=120):
         self.sock = socket.create_connection((host, port), timeout=timeout)
@@ -65,7 +70,17 @@ class Quadera:
     def choosedevice(self,devname):
         return self.cmd(f"DEVICE {devname}")
     def getdevices(self):
-        return self.cmd("DEVICES")
+        dstring = self.cmd("DEVICES")
+        dsplit = dstring.split(';')
+        ddct = {}
+        for device in dsplit:
+            index = device.split('=')[0]
+            name_type = device.split('=')[1]
+            name = name_type.split[' ('][0]
+            devtype = name_type.split[' ('][1].replace(')','')
+            dobj = DeviceName(name,devtype)
+            ddct[index] = dobj
+        return ddct
 
     def close(self):
         self.cmd("CLOSE")
