@@ -76,8 +76,8 @@ class Quadera:
         for device in dsplit:
             index = device.split('=')[0]
             name_type = device.split('=')[1]
-            name = name_type.split[' ('][0]
-            devtype = name_type.split[' ('][1].replace(')','')
+            name = name_type.split(' (')[0]
+            devtype = name_type.split(' \(')[1].replace(')','')
             dobj = DeviceName(name,devtype)
             ddct[index] = dobj
         return ddct
